@@ -5,12 +5,13 @@ on:
     branches: [ main ]
     paths:
       - 'implant/**'
+      - 'implant-java/**'
       - '.github/workflows/build-implant.yml'
-  workflow_dispatch:   # allow manual trigger from Actions tab
+  workflow_dispatch:   # manual trigger from Actions tab
 
 jobs:
-  build-windows:
-    name: Build implant.exe (MSVC)
+  build-c-windows:
+    name: Build implant.exe (C / MSVC)
     runs-on: windows-latest
 
     steps:
@@ -32,6 +33,34 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: implant-windows-x64
+          name: implant-c-windows-x64
           path: implant/build/Release/implant.exe
+          retention-days: 30
+
+  build-java:
+    name: Build implant.jar (Java)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Build jar
+        working-directory: implant-java
+        run: |
+          javac Main.java
+          jar cfe implant.jar Main Main.class
+          rm Main.class
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: implant-java
+          path: implant-java/implant.jar
           retention-days: 30
