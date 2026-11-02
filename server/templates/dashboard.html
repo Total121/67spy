@@ -9,6 +9,11 @@
 <body>
 <nav class="navbar">
   <div class="nav-brand">67SPY</div>
+  <div class="nav-links">
+    <a href="/" class="nav-tab active">Dashboard</a>
+    <span class="nav-tab-sep"></span>
+    <span id="nav-online" class="nav-stat"><span id="nav-online-count">0</span> online</span>
+  </div>
   <div class="nav-right">
     <span id="client-count" class="badge">0 clients</span>
     <a href="/logout" class="nav-link">Logout</a>
@@ -56,6 +61,8 @@ async function fetchClients() {
   if (!r.ok) return;
   const clients = await r.json();
   document.getElementById('client-count').textContent = clients.length + ' client' + (clients.length !== 1 ? 's' : '');
+  const onlineCount = clients.filter(c => c.online).length;
+  document.getElementById('nav-online-count').textContent = onlineCount;
   const tbody = document.getElementById('client-tbody');
   if (!clients.length) {
     tbody.innerHTML = '<tr><td colspan="7" class="empty">No clients yet. Waiting for beacons…</td></tr>';

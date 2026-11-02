@@ -8,7 +8,12 @@
 </head>
 <body>
 <nav class="navbar">
-  <div class="nav-brand"><a href="/" class="nav-home">← 67SPY</a></div>
+  <div class="nav-brand"><a href="/" class="nav-home">67SPY</a></div>
+  <div class="nav-links">
+    <a href="/" class="nav-tab">Dashboard</a>
+    <span class="nav-tab-sep">›</span>
+    <span class="nav-tab active" id="nav-client-name">Client</span>
+  </div>
   <div class="nav-right">
     <span id="status-dot" class="dot dot-red"></span>
     <span id="status-text" class="muted" style="font-size:13px">connecting…</span>
@@ -150,7 +155,9 @@ function reltime(ts) {
 async function loadInfo() {
   const c = await api('GET', '/op/info/' + CID);
   if (!c) return;
-  document.getElementById('c-hostname').textContent = c.hostname || CID.substring(0,8);
+  const hn = c.hostname || CID.substring(0,8);
+  document.getElementById('c-hostname').textContent = hn;
+  document.getElementById('nav-client-name').textContent = hn;
   document.getElementById('c-meta').innerHTML =
     `<span>${esc(c.username||'?')}</span> · <span>${esc(c.ip||'?')}</span> · <span>${esc(c.os_info||'?')}</span>`;
   const now = Date.now()/1000;
