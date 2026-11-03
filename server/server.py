@@ -565,6 +565,9 @@ def detect_ip() -> str:
     railway_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN")
     if railway_domain:
         return f"https://{railway_domain}"
+    render_domain = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+    if render_domain:
+        return f"https://{render_domain}"
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))

@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: 67spy-c2
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: server
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: DB_PATH
+        value: "/tmp/67spy.db"
+      - key: AES_KEY
+        sync: false
+      - key: HMAC_KEY
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: API_TOKEN
+        sync: false
+      - key: DASH_USER
+        value: admin
+      - key: DASH_PASS
+        sync: false
